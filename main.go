@@ -16,7 +16,7 @@ func main() {
 	// uncomment below code to test in local env
 	// utils.ProvideEnv()
 
-	// webscraper.TestScrapeAccuracy()
+	webscraper.TestScrapeAccuracy()
 
 	db.StartConnectionToDB()
 	defer func() {

@@ -15,5 +15,9 @@ type ClientRecentAnime struct {
 }
 
 type ClientBodyAnimeDetail struct {
-	IsInternalID bool `json:"is_internal_id"`
+	IsInternalID *bool `json:"is_internal_id" validate:"required"`
+}
+
+type ClientTokenRequest struct {
+	UserToken string `json:"user_token" validate:"required"`
 }

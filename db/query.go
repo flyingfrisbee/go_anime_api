@@ -33,4 +33,10 @@ var (
 	ORDER BY updated_timestamp DESC
 	LIMIT $1 OFFSET $2
 	`
+
+	InsertUserTokenQuery = `
+	INSERT INTO stream_anime.user (user_token)
+    VALUES ($1)
+    ON CONFLICT (user_token) DO NOTHING
+	`
 )
