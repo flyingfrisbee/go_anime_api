@@ -30,7 +30,7 @@ func main() {
 	r := mux.NewRouter()
 	router.OpenRoutes(r)
 
-	address := "localhost:8080"
+	address := ":8080"
 	if port := os.Getenv("PORT"); port != "" {
 		address = fmt.Sprintf(":%s", port)
 	}
