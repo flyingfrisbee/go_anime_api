@@ -107,3 +107,16 @@ func GetAnimeDetail(internalID string) model.AnimeDetail {
 
 	return animeDetail
 }
+
+func SaveUserToken(hashedUserToken string) (int, error) {
+	ctx, cancel := CreateContext()
+	defer cancel()
+
+	tag, err := Conn.Exec(ctx, InsertUserTokenQuery, hashedUserToken)
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+
+	return int(tag.RowsAffected()), nil
+}

@@ -15,7 +15,7 @@ func OpenRoutes(r *mux.Router) {
 	r.HandleFunc("/anime/{anime_id}", animeDetailHandler).Methods("GET") // /anime/86
 	r.HandleFunc("/video/{endpoint}", videoURLHandler).Methods("GET")    // /video//86-episode-1
 
-	r.HandleFunc("/user/create", userTokenHandler).Methods("POST")
+	r.HandleFunc("/user/create", insertUserTokenHandler).Methods("POST")
 }
 
 func methodNotAllowedHandler() http.Handler {

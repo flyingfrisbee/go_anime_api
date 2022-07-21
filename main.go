@@ -3,7 +3,7 @@ package main
 import (
 	"GithubRepository/go_anime_api/db"
 	"GithubRepository/go_anime_api/router"
-	"GithubRepository/go_anime_api/webscraper"
+	"GithubRepository/go_anime_api/utils"
 	"context"
 	"fmt"
 	"net/http"
@@ -14,18 +14,18 @@ import (
 
 func main() {
 	// uncomment below code to test in local env
-	// utils.ProvideEnv()
+	utils.ProvideEnv()
 
-	webscraper.TestScrapeAccuracy()
+	// webscraper.TestScrapeAccuracy()
 
 	db.StartConnectionToDB()
 	defer func() {
 		db.Conn.Close(context.Background())
 	}()
 
-	go func() {
-		webscraper.AutomateScrapingRepeatedly()
-	}()
+	// go func() {
+	// 	webscraper.AutomateScrapingRepeatedly()
+	// }()
 
 	r := mux.NewRouter()
 	router.OpenRoutes(r)
