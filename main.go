@@ -5,7 +5,7 @@ import (
 	"GithubRepository/go_anime_api/fcm"
 	"GithubRepository/go_anime_api/router"
 	"GithubRepository/go_anime_api/utils"
-	"context"
+	"GithubRepository/go_anime_api/webscraper"
 	"fmt"
 	"log"
 	"net/http"
@@ -21,9 +21,9 @@ func main() {
 	// webscraper.TestScrapeAccuracy()
 
 	db.StartConnectionToDB()
-	defer db.Conn.Close(context.Background())
+	defer db.Conn.Close()
 
-	// go webscraper.AutomateScrapingRepeatedly()
+	go webscraper.AutomateScrapingRepeatedly()
 	go fcm.StartFCMService()
 
 	r := mux.NewRouter()

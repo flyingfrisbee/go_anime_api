@@ -8,16 +8,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func StartConnectionToPostgre() {
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	pool, err := pgxpool.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	Conn = conn
+	Conn = pool
 }
 
 func InsertAnimeData(animeDetail *model.AnimeDetail) {

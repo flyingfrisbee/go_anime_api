@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var (
-	Conn        *pgx.Conn
+	Conn        *pgxpool.Pool
 	MongoClient *mongo.Client
 )
 
