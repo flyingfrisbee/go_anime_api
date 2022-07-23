@@ -4,7 +4,6 @@ import (
 	"GithubRepository/go_anime_api/model"
 	"GithubRepository/go_anime_api/utils"
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -27,7 +26,7 @@ func InsertAnimeData(animeDetail *model.AnimeDetail) {
 
 	_, err := Conn.Exec(
 		ctx,
-		InsertQuery,
+		InsertAnimeQuery,
 		animeDetail.AnimeID,
 		animeDetail.InternalID,
 		animeDetail.ImageURL,
@@ -54,7 +53,7 @@ func UpdateTimestampAndLatestEpisode(animeDetail *model.AnimeDetail, baseTime ti
 	ctx, cancel := CreateContext()
 	defer cancel()
 
-	tag, err := Conn.Exec(ctx, UpdateTimestampQuery, timestamp, animeDetail.LatestEpisode, animeDetail.InternalID)
+	tag, err := Conn.Exec(ctx, UpdateAnimeTimestampQuery, timestamp, animeDetail.LatestEpisode, animeDetail.InternalID)
 	if err != nil {
 		log.Println(err)
 		return false
@@ -71,14 +70,14 @@ func GetRecentlyUpdatedAnimes(offset int) ([]model.ClientRecentAnime, error) {
 
 	rows, err := Conn.Query(ctx, GetRecentAnimesQuery, 20, offset)
 	if err != nil {
-		return result, fmt.Errorf(err.Error())
+		return result, err
 	}
 
 	for rows.Next() {
 		anime := model.ClientRecentAnime{}
 		err := rows.Scan(&anime.ImageURL, &anime.Title, &anime.LatestEpisode, &anime.UpdatedTimestamp, &anime.InternalID)
 		if err != nil {
-			return result, fmt.Errorf("error when parsing from sql to struct")
+			return result, err
 		}
 		result = append(result, anime)
 	}
@@ -112,11 +111,92 @@ func SaveUserToken(hashedUserToken string) (int, error) {
 	ctx, cancel := CreateContext()
 	defer cancel()
 
-	tag, err := Conn.Exec(ctx, InsertUserTokenQuery, hashedUserToken)
+	tag, err := Conn.Exec(ctx, InsertUserTokenQuery, hashedUserToken, 0)
 	if err != nil {
-		log.Println(err)
 		return 0, err
 	}
 
 	return int(tag.RowsAffected()), nil
+}
+
+func SaveBookmarkedAnime(userToken, internalID string) (int, error) {
+	ctx, cancel := CreateContext()
+	defer cancel()
+
+	tag, err := Conn.Exec(ctx, InsertUserAnimeXrefQuery, userToken, internalID)
+	if err != nil {
+		return 0, err
+	}
+
+	return int(tag.RowsAffected()), nil
+}
+
+func DeleteBookmarkedAnime(userToken, internalID string) (int, error) {
+	ctx, cancel := CreateContext()
+	defer cancel()
+
+	tag, err := Conn.Exec(ctx, DeleteUserAnimeXrefQuery, userToken, internalID)
+	if err != nil {
+		return 0, err
+	}
+
+	return int(tag.RowsAffected()), nil
+}
+
+func GetAllUsersData() ([]model.Token, error) {
+	ctx, cancel := CreateContext()
+	defer cancel()
+
+	result := []model.Token{}
+
+	rows, err := Conn.Query(ctx, GetAllUserDataQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		token := model.Token{}
+		err := rows.Scan(&token.UserToken, &token.LastMessageSentTimestamp)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, token)
+	}
+
+	return result, nil
+}
+
+func GetUpdatedBookmarkedAnimes(userToken string) ([]string, error) {
+	ctx, cancel := CreateContext()
+	defer cancel()
+
+	result := []string{}
+
+	rows, err := Conn.Query(ctx, GetUpdatedBookmarkedAnimesQuery, userToken)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var title string
+		err := rows.Scan(&title)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, title)
+	}
+
+	return result, nil
+}
+
+func UpdateUserTimestamp(userToken string) error {
+	ctx, cancel := CreateContext()
+	defer cancel()
+
+	_, err := Conn.Exec(ctx, UpdateUserMsgTimestamp, time.Now().UnixMilli(), userToken)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

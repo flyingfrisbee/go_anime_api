@@ -15,6 +15,8 @@ var (
 )
 
 func AutomateScrapingRepeatedly() {
+	defer close(repeaterCh)
+
 	go scrapeAnimesData()
 	channelListener()
 }

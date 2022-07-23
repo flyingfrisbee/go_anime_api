@@ -1,7 +1,7 @@
 package db
 
 var (
-	InsertQuery = `
+	InsertAnimeQuery = `
     INSERT INTO stream_anime.anime (
 		anime_id, internal_id, image_url, 
 		title, type, summary, genre, 
@@ -20,7 +20,7 @@ var (
 	WHERE internal_id = $1
 	`
 
-	UpdateTimestampQuery = `
+	UpdateAnimeTimestampQuery = `
 	UPDATE stream_anime.anime 
 	SET updated_timestamp = $1, 
 		latest_episode = $2
@@ -35,8 +35,38 @@ var (
 	`
 
 	InsertUserTokenQuery = `
-	INSERT INTO stream_anime.user (user_token)
-    VALUES ($1)
+	INSERT INTO stream_anime.user (user_token, last_message_sent_timestamp)
+    VALUES ($1, $2)
     ON CONFLICT (user_token) DO NOTHING
+	`
+
+	InsertUserAnimeXrefQuery = `
+	INSERT INTO stream_anime.user_anime_xref (user_token, internal_id)
+	VALUES ($1, $2);
+	`
+
+	DeleteUserAnimeXrefQuery = `
+	DELETE FROM stream_anime.user_anime_xref
+	WHERE user_token = $1
+		AND internal_id = $2;
+	`
+
+	GetAllUserDataQuery = `
+	SELECT * FROM stream_anime.user;
+	`
+
+	GetUpdatedBookmarkedAnimesQuery = `
+	SELECT title 
+	FROM stream_anime.user_anime_xref uax
+	JOIN stream_anime.anime a
+		ON uax.internal_id = a.internal_id
+		AND uax.user_token = $1
+	WHERE uax.latest_episode > a.latest_episode;
+	`
+
+	UpdateUserMsgTimestamp = `
+	UPDATE stream_anime.user 
+	SET last_message_sent_timestamp = $1
+	WHERE user_token = $2;
 	`
 )

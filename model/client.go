@@ -18,6 +18,7 @@ type ClientBodyAnimeDetail struct {
 	IsInternalID *bool `json:"is_internal_id" validate:"required"`
 }
 
-type ClientTokenRequest struct {
-	UserToken string `json:"user_token" validate:"required"`
+type Token struct {
+	UserToken                string `json:"user_token" validate:"required"`
+	LastMessageSentTimestamp int64  `json:"last_msg_sent_timestamp,omitempty"`
 }

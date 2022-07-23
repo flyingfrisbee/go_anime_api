@@ -19,7 +19,7 @@ func insertUserTokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	var clientTokenRequest model.ClientTokenRequest
+	var clientTokenRequest model.Token
 	err = json.Unmarshal(jsonBytes, &clientTokenRequest)
 	if err != nil {
 		utils.WriteResponse(w, nil, "Error when parsing json to struct", http.StatusBadRequest)
@@ -32,8 +32,10 @@ func insertUserTokenHandler(w http.ResponseWriter, r *http.Request) {
 		utils.WriteResponse(w, nil, err.Error(), http.StatusBadRequest)
 		return
 	}
-	/*need credential to identify row, unfortunately credential means user have to sign up
-	  so i have to user raw token lmao*/
+	/*
+		need credential to identify row, unfortunately credential means user have to sign up
+		so i have to user raw token lmao
+	*/
 	// hashedToken, err := utils.HashPassword(clientTokenRequest.UserToken)
 	// if err != nil {
 	// 	utils.WriteResponse(w, nil, err.Error(), http.StatusInternalServerError)
