@@ -41,8 +41,8 @@ var (
 	`
 
 	InsertUserAnimeXrefQuery = `
-	INSERT INTO stream_anime.user_anime_xref (user_token, internal_id)
-	VALUES ($1, $2);
+	INSERT INTO stream_anime.user_anime_xref (user_token, internal_id, latest_episode)
+	VALUES ($1, $2, $3);
 	`
 
 	DeleteUserAnimeXrefQuery = `

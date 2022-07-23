@@ -119,11 +119,11 @@ func SaveUserToken(hashedUserToken string) (int, error) {
 	return int(tag.RowsAffected()), nil
 }
 
-func SaveBookmarkedAnime(userToken, internalID string) (int, error) {
+func SaveBookmarkedAnime(data model.AddBookmarkRequest) (int, error) {
 	ctx, cancel := CreateContext()
 	defer cancel()
 
-	tag, err := Conn.Exec(ctx, InsertUserAnimeXrefQuery, userToken, internalID)
+	tag, err := Conn.Exec(ctx, InsertUserAnimeXrefQuery, data.UserToken, data.InternalID, data.LatestEpisode)
 	if err != nil {
 		return 0, err
 	}
@@ -131,11 +131,11 @@ func SaveBookmarkedAnime(userToken, internalID string) (int, error) {
 	return int(tag.RowsAffected()), nil
 }
 
-func DeleteBookmarkedAnime(userToken, internalID string) (int, error) {
+func DeleteBookmarkedAnime(data model.DeleteBookmarkRequest) (int, error) {
 	ctx, cancel := CreateContext()
 	defer cancel()
 
-	tag, err := Conn.Exec(ctx, DeleteUserAnimeXrefQuery, userToken, internalID)
+	tag, err := Conn.Exec(ctx, DeleteUserAnimeXrefQuery, data.UserToken, data.InternalID)
 	if err != nil {
 		return 0, err
 	}

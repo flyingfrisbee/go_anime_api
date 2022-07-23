@@ -4,34 +4,18 @@ import (
 	"GithubRepository/go_anime_api/db"
 	"GithubRepository/go_anime_api/model"
 	"GithubRepository/go_anime_api/utils"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
-
-	"github.com/go-playground/validator/v10"
 )
 
 func insertUserTokenHandler(w http.ResponseWriter, r *http.Request) {
-	jsonBytes, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		utils.WriteResponse(w, nil, "Error when reading request body", http.StatusBadRequest)
-		return
-	}
-	defer r.Body.Close()
-
 	var clientTokenRequest model.Token
-	err = json.Unmarshal(jsonBytes, &clientTokenRequest)
-	if err != nil {
-		utils.WriteResponse(w, nil, "Error when parsing json to struct", http.StatusBadRequest)
-		return
-	}
-
-	validate := validator.New()
-	err = validate.Struct(clientTokenRequest)
+	err := utils.ParseRequestBody(r, &clientTokenRequest)
 	if err != nil {
 		utils.WriteResponse(w, nil, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
+
 	/*
 		need credential to identify row, unfortunately credential means user have to sign up
 		so i have to user raw token lmao

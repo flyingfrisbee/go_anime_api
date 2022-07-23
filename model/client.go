@@ -22,3 +22,14 @@ type Token struct {
 	UserToken                string `json:"user_token" validate:"required"`
 	LastMessageSentTimestamp int64  `json:"last_msg_sent_timestamp,omitempty"`
 }
+
+type AddBookmarkRequest struct {
+	UserToken     string `json:"user_token" validate:"required"`
+	InternalID    string `json:"internal_id" validate:"required"`
+	LatestEpisode string `json:"latest_episode" validate:"required"`
+}
+
+type DeleteBookmarkRequest struct {
+	UserToken  string `json:"user_token" validate:"required"`
+	InternalID string `json:"internal_id" validate:"required"`
+}

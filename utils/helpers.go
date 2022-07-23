@@ -3,10 +3,12 @@ package utils
 import (
 	"GithubRepository/go_anime_api/model"
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gocolly/colly/v2"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -38,6 +40,26 @@ func WriteResponse(w http.ResponseWriter, data interface{}, message string, stat
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(statusCode)
 	w.Write(jsonBytes)
+}
+
+func ParseRequestBody(r *http.Request, data interface{}) error {
+	jsonBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(jsonBytes, data)
+	if err != nil {
+		return err
+	}
+
+	validate := validator.New()
+	err = validate.Struct(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func HashPassword(input string) (string, error) {

@@ -99,7 +99,7 @@ func sendFCMToUser(userToken string, animeTitlesWithUpdate []string) error {
 	fcmMessage := FcmMessage{
 		To: userToken,
 		Notification: NotificationBody{
-			Title: fmt.Sprintf("%d anime have new update", len(animeTitlesWithUpdate)),
+			Title: fmt.Sprintf("%d bookmarked anime have new update", len(animeTitlesWithUpdate)),
 			Body:  msgBody,
 		},
 	}

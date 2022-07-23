@@ -5,13 +5,10 @@ import (
 	"GithubRepository/go_anime_api/model"
 	"GithubRepository/go_anime_api/utils"
 	"GithubRepository/go_anime_api/webscraper"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
 
@@ -66,26 +63,13 @@ func animeDetailHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	ID := params["anime_id"]
 
-	jsonBytes, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		utils.WriteResponse(w, nil, "Error when reading request body", http.StatusBadRequest)
-		return
-	}
-	defer r.Body.Close()
-
 	var body model.ClientBodyAnimeDetail
-	err = json.Unmarshal(jsonBytes, &body)
-	if err != nil {
-		utils.WriteResponse(w, nil, "Error when parsing JSON to struct", http.StatusBadRequest)
-		return
-	}
-
-	validate := validator.New()
-	err = validate.Struct(body)
+	err := utils.ParseRequestBody(r, &body)
 	if err != nil {
 		utils.WriteResponse(w, nil, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
 
 	// get from db
 	if *body.IsInternalID {
