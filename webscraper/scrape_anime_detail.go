@@ -2,7 +2,6 @@ package webscraper
 
 import (
 	"GithubRepository/go_anime_api/model"
-	"GithubRepository/go_anime_api/utils"
 	"fmt"
 	"os"
 	"strings"
@@ -48,7 +47,7 @@ func ScrapeAnimeDetail(animeID string) (*model.AnimeDetail, bool) {
 		animeDetail.InternalID = internalID
 	})
 
-	utils.SetLoggerForColly(collector)
+	// utils.SetLoggerForColly(collector)
 
 	URLToVisit := fmt.Sprintf("%s/category/%s", os.Getenv("WebsiteURL"), animeID)
 	collector.Visit(URLToVisit)

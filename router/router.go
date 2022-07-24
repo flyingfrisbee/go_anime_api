@@ -10,10 +10,10 @@ import (
 func OpenRoutes(r *mux.Router) {
 	r.MethodNotAllowedHandler = methodNotAllowedHandler()
 
-	r.HandleFunc("/", recentAnimeHandler).Methods("GET")                 // /?page=1
-	r.HandleFunc("/title", searchTitleHandler).Methods("GET")            // /title?keyword=kimetsu
-	r.HandleFunc("/anime/{anime_id}", animeDetailHandler).Methods("GET") // /anime/86
-	r.HandleFunc("/video/{endpoint}", videoURLHandler).Methods("GET")    // /video//86-episode-1
+	r.HandleFunc("/", recentAnimeHandler).Methods("GET")                  // /?page=1
+	r.HandleFunc("/title", searchTitleHandler).Methods("GET")             // /title?keyword=kimetsu
+	r.HandleFunc("/anime/{anime_id}", animeDetailHandler).Methods("POST") // /anime/86
+	r.HandleFunc("/video/{endpoint}", videoURLHandler).Methods("GET")     // /video//86-episode-1
 
 	r.HandleFunc("/user/create", insertUserTokenHandler).Methods("POST")
 
