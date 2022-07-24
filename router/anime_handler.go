@@ -85,7 +85,10 @@ func animeDetailHandler(w http.ResponseWriter, r *http.Request) {
 		utils.WriteResponse(w, nil, "Something bad happened", http.StatusInternalServerError)
 		return
 	}
-	animeDetail.Episodes = webscraper.ScrapeEpisodes(animeDetail.InternalID)
+	var episodes = webscraper.ScrapeEpisodes(animeDetail.InternalID)
+	animeDetail.LatestEpisode = episodes[len(episodes)-1].ForUI
+	animeDetail.Episodes = episodes
+
 	utils.WriteResponse(w, *animeDetail, "Success fetch anime detail", http.StatusOK)
 }
 

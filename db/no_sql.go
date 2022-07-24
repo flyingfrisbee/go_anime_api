@@ -46,7 +46,8 @@ func InsertBulkEpisodes(internalID string, episodes []model.Episode) {
 	ctx, cancel := CreateContext()
 	defer cancel()
 
-	_, err := coll.InsertMany(ctx, convertedEpisodes)
+	opts := options.InsertMany().SetOrdered(true)
+	_, err := coll.InsertMany(ctx, convertedEpisodes, opts)
 	if err != nil {
 		log.Println(err)
 		return

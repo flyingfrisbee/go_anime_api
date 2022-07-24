@@ -15,7 +15,7 @@ var (
 	GetAnimeDetailQuery = `
 	SELECT image_url, title, type, summary, 
 		genre, released_date, airing_status, 
-		updated_timestamp, internal_id
+		updated_timestamp, internal_id, latest_episode
 	FROM stream_anime.anime
 	WHERE internal_id = $1
 	`
@@ -56,7 +56,7 @@ var (
 	`
 
 	GetUpdatedBookmarkedAnimesQuery = `
-	SELECT title 
+	SELECT title, a.internal_id, a.latest_episode, a.image_url
 	FROM stream_anime.user_anime_xref uax
 	JOIN stream_anime.anime a
 		ON uax.internal_id = a.internal_id

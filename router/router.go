@@ -18,7 +18,8 @@ func OpenRoutes(r *mux.Router) {
 	r.HandleFunc("/user/create", insertUserTokenHandler).Methods("POST")
 
 	r.HandleFunc("/bookmark/create", addBookmarkHandler).Methods("POST")
-	r.HandleFunc("/bookmark/delete", deleteBookmarkHandler).Methods("DELETE")
+	r.HandleFunc("/bookmark/delete", deleteBookmarkHandler).Methods("POST")
+	r.HandleFunc("/bookmark/update", newUpdateBookmarkedAnimeHandler).Methods("GET") // /bookmark/update?token='abeceda'
 }
 
 func methodNotAllowedHandler() http.Handler {

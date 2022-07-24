@@ -102,6 +102,7 @@ func GetAnimeDetail(internalID string) model.AnimeDetail {
 		&animeDetail.AiringStatus,
 		&animeDetail.UpdatedTimestamp,
 		&animeDetail.InternalID,
+		&animeDetail.LatestEpisode,
 	)
 
 	return animeDetail
@@ -166,11 +167,11 @@ func GetAllUsersData() ([]model.Token, error) {
 	return result, nil
 }
 
-func GetUpdatedBookmarkedAnimes(userToken string) ([]string, error) {
+func GetUpdatedBookmarkedAnimes(userToken string) ([]model.BookmarkedAnime, error) {
 	ctx, cancel := CreateContext()
 	defer cancel()
 
-	result := []string{}
+	result := []model.BookmarkedAnime{}
 
 	rows, err := Conn.Query(ctx, GetUpdatedBookmarkedAnimesQuery, userToken)
 	if err != nil {
@@ -178,12 +179,17 @@ func GetUpdatedBookmarkedAnimes(userToken string) ([]string, error) {
 	}
 
 	for rows.Next() {
-		var title string
-		err := rows.Scan(&title)
+		var bookmarkedAnime model.BookmarkedAnime
+		err := rows.Scan(
+			&bookmarkedAnime.Title,
+			&bookmarkedAnime.InternalID,
+			&bookmarkedAnime.LatestEpisode,
+			&bookmarkedAnime.ImageURL,
+		)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, title)
+		result = append(result, bookmarkedAnime)
 	}
 
 	return result, nil

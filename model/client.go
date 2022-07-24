@@ -33,3 +33,10 @@ type DeleteBookmarkRequest struct {
 	UserToken  string `json:"user_token" validate:"required"`
 	InternalID string `json:"internal_id" validate:"required"`
 }
+
+type BookmarkedAnime struct {
+	Title         string `json:"title"`
+	InternalID    string `json:"internal_id"`
+	LatestEpisode string `json:"latest_episode"`
+	ImageURL      string `json:"image_url"`
+}

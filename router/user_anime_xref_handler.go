@@ -52,3 +52,14 @@ func deleteBookmarkHandler(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteResponse(w, nil, "Success unbookmark anime", http.StatusOK)
 }
+
+func newUpdateBookmarkedAnimeHandler(w http.ResponseWriter, r *http.Request) {
+	userToken := r.URL.Query().Get("token")
+	bookmarkedAnimes, err := db.GetUpdatedBookmarkedAnimes(userToken)
+	if err != nil {
+		utils.WriteResponse(w, nil, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	utils.WriteResponse(w, bookmarkedAnimes, "Success retrieving bookmarked anime with updates", http.StatusOK)
+}

@@ -93,17 +93,17 @@ func retrieveUsersData() ([]model.Token, error) {
 	return users, nil
 }
 
-func sendFCMToUser(userToken string, animeTitlesWithUpdate []string) error {
+func sendFCMToUser(userToken string, bookmarkedAnimeWithUpdate []model.BookmarkedAnime) error {
 	var msgBody string
-	for _, v := range animeTitlesWithUpdate {
-		msgBody += v + ", "
+	for _, v := range bookmarkedAnimeWithUpdate {
+		msgBody += v.Title + ", "
 	}
 	msgBody = msgBody[:len(msgBody)-2]
 
 	fcmMessage := FcmMessage{
 		To: userToken,
 		Notification: NotificationBody{
-			Title: fmt.Sprintf("%d bookmarked anime have new update", len(animeTitlesWithUpdate)),
+			Title: fmt.Sprintf("%d bookmarked anime have new update", len(bookmarkedAnimeWithUpdate)),
 			Body:  msgBody,
 		},
 	}
