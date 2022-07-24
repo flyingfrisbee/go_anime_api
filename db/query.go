@@ -61,7 +61,7 @@ var (
 	JOIN stream_anime.anime a
 		ON uax.internal_id = a.internal_id
 		AND uax.user_token = $1
-	WHERE uax.latest_episode > a.latest_episode;
+	WHERE uax.latest_episode < a.latest_episode;
 	`
 
 	UpdateUserMsgTimestamp = `

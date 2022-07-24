@@ -65,6 +65,10 @@ func sendFCMToElligibleUsers() {
 				return
 			}
 
+			if len(animeTitlesWithUpdate) < 1 {
+				continue
+			}
+
 			err = sendFCMToUser(v.UserToken, animeTitlesWithUpdate)
 			if err != nil {
 				log.Println(err)
